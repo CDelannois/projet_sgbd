@@ -15,9 +15,11 @@ Collections:
         	Liste des interventions
             •	Date
             •	Objet
-            •	Local:
+
+•	Local:
     o	Numéro du local
     o	Type de classe (normale, labo info, labo science, etc.)
+
 •	Professeurs
     o	Nom
     o	Prénom
@@ -27,6 +29,7 @@ Collections:
             •	Intitulé
             •	Année
             •	Classe (1A, 3Q, etc.)
+
 •	Classes
     o	Année
     o	Option

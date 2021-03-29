@@ -8,12 +8,16 @@ app.use(bodyparser.urlencoded({ extended: false }));
 
 //import controllers
 const computers = require("./controllers/computers");
+const locals = require("./controllers/locals");
+const teachers = require("./controllers/teachers");
 
 (async () => {
     const db = await databaseConnexion();
 
     //call controllers
     computers(app, db);
+    locals(app, db);
+    teachers(app, db);
 
     app.get('/', (req, res) => {
         res.send('Hello World!')
