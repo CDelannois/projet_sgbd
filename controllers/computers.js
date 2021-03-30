@@ -177,12 +177,12 @@ module.exports = (app, db) => {
             { $project: { intervention: 1, _id: 0 } },
             {
                 $addFields: {
-                    date_intervention: '$intervention.date_intervention',
+                    intervention_date: '$intervention.intervention_date',
                     object: '$intervention.object',
                     _id: '$intervention._id',
                 }
             },
-            { $project: { date_intervention: 1, object: 1 } },
+            { $project: { intervention_date: 1, object: 1 } },
         ]).toArray();
 
         res.json(interventions);
@@ -192,13 +192,13 @@ module.exports = (app, db) => {
     app.post('/computers/:computerId/interventions', async (req, res) => {
         const { computerId } = req.params;
         const { date, object } = req.body;
-        const date_intervention = new Date(date);
+        const intervention_date = new Date(date);
         const _id = new ObjectID(computerId);
 
         const { value } = await computersCollection.findOneAndUpdate({
             _id
         }, {
-            $push: { intervention: { date_intervention, object, _id: new ObjectID() } }
+            $push: { intervention: { intervention_date, object, _id: new ObjectID() } }
         }, {
             returnOriginal: false,
         })
@@ -209,7 +209,7 @@ module.exports = (app, db) => {
     app.post('/computers/:computerId/interventions/:interventionId', async (req, res) => {
         const { computerId, interventionId } = req.params;
         const { date, object } = req.body;
-        const date_intervention = new Date(date)
+        const intervention_date = new Date(date)
         const _id = new ObjectID(computerId);
         const _interventionId = new ObjectID(interventionId);
 
@@ -218,7 +218,7 @@ module.exports = (app, db) => {
             'intervention._id': _interventionId
         }, {
             $set: {
-                'intervention.$.date_intervention': date_intervention,
+                'intervention.$.intervention_date': intervention_date,
                 'intervention.$.object': object,
             }
         }, {

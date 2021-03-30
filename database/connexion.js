@@ -1,6 +1,10 @@
 const MongoClient = require("mongodb").MongoClient;
 
 //Import des contraintes
+const classes_constraint = require('./validation/classes_constraint');
+const computers_constraint = require('./validation/computers_constraint');
+const locals_constraint = require('./validation/locals_constraint');
+const teachers_constraint = require('./validation/teachers_constraint');
 
 const url = "mongodb://localhost:27017";
 
@@ -11,8 +15,10 @@ const getDb = async () => {
   try {
     const client = await MongoClient.connect(url, { useUnifiedTopology: true });
     db = client.db(dbName);
-    /*AJOUTER LES CONTRAINTES ICI
-    await Constraint(db);*/
+    await classes_constraint(db);
+    await computers_constraint(db);
+    await locals_constraint(db);
+    await teachers_constraint(db);
   } catch (error) {
     console.error(error);
   }
