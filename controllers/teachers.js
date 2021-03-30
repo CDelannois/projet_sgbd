@@ -20,7 +20,7 @@ module.exports = (app, db) => {
             const { teacherId } = req.params;
             const _id = new ObjectID(teacherId);
             const teacher = await teachersCollection.findOne({ _id });
-            if (computer == null) {
+            if (teacher == null) {
                 res.status(404).send({ error: "Impossible to find this teacher" });
             }
 

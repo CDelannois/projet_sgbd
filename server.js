@@ -10,6 +10,7 @@ app.use(bodyparser.urlencoded({ extended: false }));
 const computers = require("./controllers/computers");
 const locals = require("./controllers/locals");
 const teachers = require("./controllers/teachers");
+const classes = require("./controllers/classes");
 
 (async () => {
     const db = await databaseConnexion();
@@ -18,6 +19,7 @@ const teachers = require("./controllers/teachers");
     computers(app, db);
     locals(app, db);
     teachers(app, db);
+    classes(app, db);
 
     app.get('/', (req, res) => {
         res.send('Hello World!')
