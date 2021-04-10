@@ -45,14 +45,14 @@ Pour ce projet, il vous est demandé de développer une API REST qui va interagi
 
 Le projet sera à réaliser seul ou par groupe de 2 et devra respecter les contraintes suivantes :
 
-•	Être développé en NODEJS via le Framework Express
-•	Interagir avec MongoDB via le driver NODEJS MongoDB (ne pas utiliser Mongoose)
-•	Comporter au minimum 4 collections.
-•	Chaque collection devra avoir son Schema Validation
-•	Comporter au moins 3 requêtes d'aggregate
-•	Au moins 1 des collections doit comporter un sous document 
-•	Au moins 2 des collections devront contenir des références à d’autres collections, plus utilisez des lookup pour joindre les documents.
-•	Vous devrez créer les différentes routes vous permettant d’ajouter, modifier, consulter et supprimer les données (provenant de MongoDb)
+V	Être développé en NODEJS via le Framework Express
+V	Interagir avec MongoDB via le driver NODEJS MongoDB (ne pas utiliser Mongoose)
+V	Comporter au minimum 4 collections.
+•	Chaque collection devra avoir son Schema Validation ==> En cours ==> Max
+•	Comporter au moins 3 requêtes d'aggregate ==> Charles
+V	Au moins 1 des collections doit comporter un sous document 
+•	Au moins 2 des collections devront contenir des références à d’autres collections ==> OK, plus utilisez des lookup pour joindre les documents. => Un chacun (Classe ==> Local ==> Charles) ET (Ordinateur ==> Local ==> Max)
+•	Vous devrez créer les différentes routes vous permettant d’ajouter, modifier, consulter et supprimer les données (provenant de MongoDb) OK ==> Ajouter routes aggregate et lookup
 •	Utiliser les codes HTTP et méthodes appropriés.
 •	A chaque endroit où vous posterez des informations, utilisez des validateurs afin de vérifier en amont les données.
 
