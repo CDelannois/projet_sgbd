@@ -143,7 +143,7 @@ module.exports = (app, db) => {
         res.json({ value });
     });
 
-    //Supprimer un cours
+    //Supprimer un élève
     app.delete('/classes/:classeId/students/:studentId', async (req, res) => {
         const { classeId, studentId } = req.params;
         const _id = new ObjectID(classeId);
@@ -162,5 +162,25 @@ module.exports = (app, db) => {
             returnOriginal: false,
         })
         res.json({ value });
+    });
+
+
+    //________________________________________________________________________Lookup - local____________________________________________________________________________________
+    //Récupération des locaux de la classe
+    app.get("/classes/:classeId/local", async (req, res) => {
+        const { classeId } = req.params;
+
+        const local = await classesCollection.aggregate([
+            {
+                $lookup: {
+                    from: 'locals',
+                    localField: 'local',
+                    foreignField: 'label',
+                    as: 'local'
+                }
+            }
+        ]).toArray();
+
+        res.json(local);
     });
 }

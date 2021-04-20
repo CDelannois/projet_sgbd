@@ -7,6 +7,7 @@ Collections:
     o	Type de disque
     o	Capacité du disque
     o	Date d'installation
+    o   Local
     o	Sous document 1:
         	Liste des logiciels
             •	Nom
@@ -28,7 +29,7 @@ Collections:
         	Liste des cours
             •	Intitulé
             •	Année
-            •	Classe (1A, 3Q, etc.)
+            •	Classe (Libellé de la collection classes)
 
 •	Classes
     o	Libellé
@@ -37,6 +38,8 @@ Collections:
         	Liste des élèves
             •	Nom
             •	Prénom
+    o   Local (numéro du local de la collection local)
+
 
 Projet de développement SGBD
 
@@ -49,10 +52,10 @@ V	Être développé en NODEJS via le Framework Express
 V	Interagir avec MongoDB via le driver NODEJS MongoDB (ne pas utiliser Mongoose)
 V	Comporter au minimum 4 collections.
 •	Chaque collection devra avoir son Schema Validation ==> En cours ==> Max
-•	Comporter au moins 3 requêtes d'aggregate ==> Charles
+V	Comporter au moins 3 requêtes d'aggregate ==> Charles
 V	Au moins 1 des collections doit comporter un sous document 
-•	Au moins 2 des collections devront contenir des références à d’autres collections ==> OK, plus utilisez des lookup pour joindre les documents. => Un chacun (Classe ==> Local ==> Charles) ET (Ordinateur ==> Local ==> Max)
-•	Vous devrez créer les différentes routes vous permettant d’ajouter, modifier, consulter et supprimer les données (provenant de MongoDb) OK ==> Ajouter routes aggregate et lookup
+•	Au moins 2 des collections devront contenir des références à d’autres collections, plus utilisez des lookup pour joindre les documents. => Un chacun (Classe ==> Local ==> Charles) ET (Ordinateur ==> Local ==> Max)
+•	Vous devrez créer les différentes routes vous permettant d’ajouter, modifier, consulter et supprimer les données (provenant de MongoDb) OK ==> Ajouter routes lookup
 •	Utiliser les codes HTTP et méthodes appropriés.
 •	A chaque endroit où vous posterez des informations, utilisez des validateurs afin de vérifier en amont les données.
 

@@ -165,4 +165,23 @@ module.exports = (app, db) => {
         })
         res.json({ value });
     });
+
+    //________________________________________________________________________Lookup - classes________________________________________________________________________________
+    //Récupération des classes où un professeur donne cours
+    app.get("/teachers/:teacherId/classes", async (req, res) => {
+        const { teacherId } = req.params;
+
+        const classes = await teachersCollection.aggregate([
+            {
+                $lookup: {
+                    from: 'classes',
+                    localField: 'course',
+                    foreignField: 'label',
+                    as: 'classe'
+                }
+            }
+        ]).toArray();
+
+        res.json(classes);
+    });
 }
