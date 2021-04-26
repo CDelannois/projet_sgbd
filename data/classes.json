@@ -1,0 +1,15 @@
+[{
+  "_id": {
+    "$oid": "607ee155776347494c20d68d"
+  },
+  "label": "3P2",
+  "option": "Puériculture",
+  "local": "405"
+},{
+  "_id": {
+    "$oid": "607ee160776347494c20d68e"
+  },
+  "label": "1C1",
+  "option": "/",
+  "local": "101"
+}]
