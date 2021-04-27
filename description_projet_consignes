@@ -67,3 +67,4 @@ Attention : Ne commencez pas le développement sans validation au préalable et 
 
 L’application devra être remise au plus tard le mercredi 10 mai par email à l’adresse suivante : samuel.lassoie@gmail.com.
 
+ssh- L localhost:27033:localhost:27017 ecole@135.125.95.178
