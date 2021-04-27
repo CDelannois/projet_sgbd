@@ -173,13 +173,55 @@ module.exports = (app, db) => {
 
         const classes = await teachersCollection.aggregate([
             {
+                $match: { _id: new ObjectID(teacherId) }
+            },
+            {
+                $unwind: "$course"
+            },
+            {
                 $lookup: {
                     from: 'classes',
-                    localField: 'course',
-                    foreignField: 'label',
-                    as: 'classe'
+                    let: { course_group: "$course.group" },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $eq: ["$label", "$$course_group"]
+                                }
+                            }
+                        }
+                    ],
+                    as: 'teacher_class',
                 }
-            }
+            },
+            {
+                $unwind: "$teacher_class"
+            },
+            {
+                $addFields: {
+                    teacher: { $concat: ["$first_name", " ", "$last_name"] },
+                    cours: "$course.label",
+                    class: "$teacher_class.label",
+                    option: "$teacher_class.option",
+                    local: "$teacher_class.local",
+
+                }
+            },
+            {
+                $project:
+                {
+                    _id: 0,
+                    teacher: 1,
+                    discipline: 1,
+                    cours: 1,
+                    class: 1,
+                    option: 1,
+                    local: 1,
+                }
+            },
+            {
+                $group: { _id: "$teacher", classes: { $push: "$$ROOT" } }
+            },
         ]).toArray();
 
         res.json(classes);
