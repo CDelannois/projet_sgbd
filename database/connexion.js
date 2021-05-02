@@ -9,7 +9,7 @@ const login_constraint = require('./validation/login_constraint');
 
 const url = "mongodb://localhost:27017";//Quand l'API sera terminée, remplacer par 27033.
 
-const dbName = "Charles";
+const dbName = "gestion_ordinateurs";
 
 const getDb = async () => {
   let db;

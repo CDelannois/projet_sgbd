@@ -212,7 +212,6 @@ module.exports = (app, db) => {
                 {
                     _id: 0,
                     teacher: 1,
-                    discipline: 1,
                     cours: 1,
                     class: 1,
                     option: 1,
@@ -220,7 +219,12 @@ module.exports = (app, db) => {
                 }
             },
             {
-                $group: { _id: "$teacher", classes: { $push: "$$ROOT" } }
+                $group: {
+                    _id: "$teacher", classes:
+                    {
+                        $push: "$$ROOT"
+                    }
+                }
             },
         ]).toArray();
 
