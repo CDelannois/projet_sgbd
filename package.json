@@ -1,7 +1,6 @@
 {
   "name": "sgbd_gestion_ordinateurs",
   "version": "1.0.0",
-  "description": "",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -27,6 +26,9 @@
     "nodemon": "^2.0.7",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
-    "passport-local": "^1.0.0"
-  }
+    "passport-local": "^1.0.0",
+    "validator": "^13.6.0"
+  },
+  "devDependencies": {},
+  "description": ""
 }

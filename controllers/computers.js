@@ -1,4 +1,7 @@
-const { Db, ObjectID } = require('mongodb');
+const {
+    Db,
+    ObjectID
+} = require('mongodb');
 
 module.exports = (app, db) => {
     if (!(db instanceof Db)) {
@@ -9,25 +12,40 @@ module.exports = (app, db) => {
 
     //Lister les ordinateurs
     app.get('/computers', async (req, res) => {
-        const computers = await computersCollection.find().toArray();
+        try {
+            const computers = await computersCollection.find().toArray();
 
-        res.json(computers);
+            res.json(computers);
+        } catch (err) {
+            return res.status(400).json({
+                    error: "Something went wrong!"
+                }),
+                console.error(`An error occured : ${err}`)
+        }
     });
 
     //Lister un ordinateur
     app.get('/computers/:computerId', async (req, res) => {
         try {
-            const { computerId } = req.params;
+            const {
+                computerId
+            } = req.params;
             const _id = new ObjectID(computerId);
-            const computer = await computersCollection.findOne({ _id });
+            const computer = await computersCollection.findOne({
+                _id
+            });
             if (computer == null) {
-                res.status(404).send({ error: "Impossible to find this computer" });
+                res.status(404).send({
+                    error: "Impossible to find this computer"
+                });
             }
 
             res.json(computer);
-        }
-        catch (err) {
-            console.error(`An error occured : ${err}`)
+        } catch (err) {
+            return res.status(400).json({
+                    error: "Something went wrong!"
+                }),
+                console.error(`An error occured : ${err}`)
         }
     });
 
@@ -39,98 +57,183 @@ module.exports = (app, db) => {
             const response = await db.collection("computers").insertOne(data);
 
             if (response.result.n !== 1 && response.result.ok !== 1) {
-                return res.status(400).json({ error: 'impossible to create computer!' });
+                return res.status(400).json({
+                    error: 'impossible to create computer!'
+                });
             }
             const [computer] = response.ops;
 
-            res.json({ computer });
-        }
-        catch (err) {
-            console.error(`An error occured : ${err}`)
-            res.json(err)
+            res.json({
+                computer
+            });
+        } catch (err) {
+            return res.status(400).json({
+                    error: "Something went wrong!"
+                }),
+                console.error(`An error occured : ${err}`)
         }
     });
 
 
     //Mettre à jour un ordinateur
     app.post('/computers/:computerId', async (req, res) => {
-        const { computerId } = req.params;
-        const data = req.body;
+        try {
+            const {
+                computerId
+            } = req.params;
+            const data = req.body;
 
-        const _id = new ObjectID(computerId);
-        const response = await computersCollection.findOneAndUpdate(
-            { _id },
-            { $set: data },
-            { returnOriginal: false }
-        );
-        if (response.ok !== 1) {
-            return res.status(400).json({ error: 'Impossible to update the computer' });
+            const _id = new ObjectID(computerId);
+            const response = await computersCollection.findOneAndUpdate({
+                _id
+            }, {
+                $set: data
+            }, {
+                returnOriginal: false
+            });
+            if (response.ok !== 1) {
+                return res.status(400).json({
+                    error: 'Impossible to update the computer'
+                });
+            }
+
+            res.json(response.value);
+        } catch (err) {
+            return res.status(400).json({
+                    error: "Something went wrong!"
+                }),
+                console.error(`An error occured : ${err}`)
         }
-
-        res.json(response.value);
     });
 
     //Supprimer un ordinateur
     app.delete('/computers/:computerId', async (req, res) => {
-        const { computerId } = req.params;
-        const _id = new ObjectID(computerId);
+        try {
+            const {
+                computerId
+            } = req.params;
+            const _id = new ObjectID(computerId);
 
-        const response = await computersCollection.findOneAndDelete({ _id });
+            const response = await computersCollection.findOneAndDelete({
+                _id
+            });
 
-        if (response.value === null) {
-            return res.status(404).send({ error: "This computer doesn't exist." })
+            if (response.value === null) {
+                return res.status(404).send({
+                    error: "This computer doesn't exist."
+                })
+            }
+
+            res.status(204).send();
+        } catch (err) {
+            return res.status(400).json({
+                    error: "Something went wrong!"
+                }),
+                console.error(`An error occured : ${err}`)
         }
-
-        res.status(204).send();
     });
 
     //_____________________________________________________________________Logiciels_____________________________________________________________________________________________
 
     //Récupération de tous les logiciels
     app.get("/computers/:computerId/softwares", async (req, res) => {
-        const { computerId } = req.params;
+        try {
+            const {
+                computerId
+            } = req.params;
 
-        const softwares = await computersCollection.aggregate([
-            { $match: { _id: new ObjectID(computerId) } },
-            { $unwind: '$software' },
-            { $project: { software: 1, _id: 0 } },
-            {
-                $addFields: {
-                    name: '$software.name',
-                    description: '$software.description',
-                    _id: '$software._id',
-                }
-            },
-            { $project: { name: 1, description: 1 } },
-        ]).toArray();
+            const softwares = await computersCollection.aggregate([{
+                    $match: {
+                        _id: new ObjectID(computerId)
+                    }
+                },
+                {
+                    $unwind: '$software'
+                },
+                {
+                    $project: {
+                        software: 1,
+                        _id: 0
+                    }
+                },
+                {
+                    $addFields: {
+                        name: '$software.name',
+                        description: '$software.description',
+                        _id: '$software._id',
+                    }
+                },
+                {
+                    $project: {
+                        name: 1,
+                        description: 1
+                    }
+                },
+            ]).toArray();
 
-        res.json(softwares);
+            res.json(softwares);
+        } catch (err) {
+            return res.status(400).json({
+                    error: "Something went wrong!"
+                }),
+                console.error(`An error occured : ${err}`)
+        }
     });
 
     //Ajouter un logiciel
     app.post('/computers/:computerId/softwares', async (req, res) => {
-        const { computerId } = req.params;
-        const { name, description } = req.body;
-        const _id = new ObjectID(computerId);
+        try {
+            const {
+                computerId
+            } = req.params;
+            const {
+                name,
+                description
+            } = req.body;
+            const _id = new ObjectID(computerId);
 
-        const { value } = await computersCollection.findOneAndUpdate({
-            _id
-        }, {
-            $push: { software: { name, description, _id: new ObjectID() } }
-        }, {
-            returnOriginal: false,
-        })
-        res.json({ value });
+            const {
+                value
+            } = await computersCollection.findOneAndUpdate({
+                _id
+            }, {
+                $push: {
+                    software: {
+                        name,
+                        description,
+                        _id: new ObjectID()
+                    }
+                }
+            }, {
+                returnOriginal: false,
+            })
+            res.json({
+                value
+            });
+        } catch (err) {
+            return res.status(400).json({
+                    error: "Something went wrong!"
+                }),
+                console.error(`An error occured : ${err}`)
+        }
     });
 
     //Modifier un logiciel
     app.post('/computers/:computerId/softwares/:softwareId', async (req, res) => {
-        const { computerId, softwareId } = req.params;
-        const { name, description } = req.body;
+        const {
+            computerId,
+            softwareId
+        } = req.params;
+        const {
+            name,
+            description
+        } = req.body;
         const _id = new ObjectID(computerId);
         const _softwareId = new ObjectID(softwareId);
 
-        const { value } = await computersCollection.findOneAndUpdate({
+        const {
+            value
+        } = await computersCollection.findOneAndUpdate({
             _id,
             'software._id': _softwareId
         }, {
@@ -141,40 +244,60 @@ module.exports = (app, db) => {
         }, {
             returnOriginal: false,
         });
-        res.json({ value });
+        res.json({
+            value
+        });
     });
 
     //Supprimer un logiciel
     app.delete('/computers/:computerId/softwares/:softwareId', async (req, res) => {
-        const { computerId, softwareId } = req.params;
+        const {
+            computerId,
+            softwareId
+        } = req.params;
         const _id = new ObjectID(computerId);
         const _softwareId = new ObjectID(softwareId);
 
-        const { value } = await computersCollection.findOneAndUpdate({
+        const {
+            value
+        } = await computersCollection.findOneAndUpdate({
             _id
         }, {
             $pull: {
-                software:
-                {
+                software: {
                     _id: _softwareId
                 }
             }
         }, {
             returnOriginal: false,
         })
-        res.json({ value });
+        res.json({
+            value
+        });
     });
 
     //_____________________________________________________________________Interventions________________________________________________________________________________________
 
     //Récupération de toutes les interventions
     app.get("/computers/:computerId/interventions", async (req, res) => {
-        const { computerId } = req.params;
+        const {
+            computerId
+        } = req.params;
 
-        const interventions = await computersCollection.aggregate([
-            { $match: { _id: new ObjectID(computerId) } },
-            { $unwind: '$intervention' },
-            { $project: { intervention: 1, _id: 0 } },
+        const interventions = await computersCollection.aggregate([{
+                $match: {
+                    _id: new ObjectID(computerId)
+                }
+            },
+            {
+                $unwind: '$intervention'
+            },
+            {
+                $project: {
+                    intervention: 1,
+                    _id: 0
+                }
+            },
             {
                 $addFields: {
                     intervention_date: '$intervention.intervention_date',
@@ -182,7 +305,12 @@ module.exports = (app, db) => {
                     _id: '$intervention._id',
                 }
             },
-            { $project: { intervention_date: 1, object: 1 } },
+            {
+                $project: {
+                    intervention_date: 1,
+                    object: 1
+                }
+            },
         ]).toArray();
 
         res.json(interventions);
@@ -190,30 +318,53 @@ module.exports = (app, db) => {
 
     //Ajouter une intervention
     app.post('/computers/:computerId/interventions', async (req, res) => {
-        const { computerId } = req.params;
-        const { date, object } = req.body;
+        const {
+            computerId
+        } = req.params;
+        const {
+            date,
+            object
+        } = req.body;
         const intervention_date = new Date(date);
         const _id = new ObjectID(computerId);
 
-        const { value } = await computersCollection.findOneAndUpdate({
+        const {
+            value
+        } = await computersCollection.findOneAndUpdate({
             _id
         }, {
-            $push: { intervention: { intervention_date, object, _id: new ObjectID() } }
+            $push: {
+                intervention: {
+                    intervention_date,
+                    object,
+                    _id: new ObjectID()
+                }
+            }
         }, {
             returnOriginal: false,
         })
-        res.json({ value });
+        res.json({
+            value
+        });
     });
 
     //Modifier une intervention
     app.post('/computers/:computerId/interventions/:interventionId', async (req, res) => {
-        const { computerId, interventionId } = req.params;
-        const { date, object } = req.body;
+        const {
+            computerId,
+            interventionId
+        } = req.params;
+        const {
+            date,
+            object
+        } = req.body;
         const intervention_date = new Date(date)
         const _id = new ObjectID(computerId);
         const _interventionId = new ObjectID(interventionId);
 
-        const { value } = await computersCollection.findOneAndUpdate({
+        const {
+            value
+        } = await computersCollection.findOneAndUpdate({
             _id,
             'intervention._id': _interventionId
         }, {
@@ -224,27 +375,35 @@ module.exports = (app, db) => {
         }, {
             returnOriginal: false,
         });
-        res.json({ value });
+        res.json({
+            value
+        });
     });
 
     //Supprimer une intervention
     app.delete('/computers/:computerId/interventions/:interventionId', async (req, res) => {
-        const { computerId, interventionId } = req.params;
+        const {
+            computerId,
+            interventionId
+        } = req.params;
         const _id = new ObjectID(computerId);
         const _interventionId = new ObjectID(interventionId);
 
-        const { value } = await computersCollection.findOneAndUpdate({
+        const {
+            value
+        } = await computersCollection.findOneAndUpdate({
             _id
         }, {
             $pull: {
-                intervention:
-                {
+                intervention: {
                     _id: _interventionId
                 }
             }
         }, {
             returnOriginal: false,
         })
-        res.json({ value });
+        res.json({
+            value
+        });
     });
 }

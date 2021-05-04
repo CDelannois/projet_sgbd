@@ -1,4 +1,7 @@
-const { Db, ObjectID } = require('mongodb');
+const {
+    Db,
+    ObjectID
+} = require('mongodb');
 
 module.exports = (app, db) => {
     if (!(db instanceof Db)) {
@@ -9,25 +12,40 @@ module.exports = (app, db) => {
 
     //Lister les locaux
     app.get('/locals', async (req, res) => {
-        const locals = await localsCollection.find().toArray();
+        try {
+            const locals = await localsCollection.find().toArray();
 
-        res.json(locals);
+            res.json(locals);
+        } catch (err) {
+            return res.status(400).json({
+                    error: "Something went wrong!"
+                }),
+                console.error(`An error occured : ${err}`)
+        }
     });
 
     //Lister un local
     app.get('/locals/:localId', async (req, res) => {
         try {
-            const { localId } = req.params;
+            const {
+                localId
+            } = req.params;
             const _id = new ObjectID(localId);
-            const local = await localsCollection.findOne({ _id });
+            const local = await localsCollection.findOne({
+                _id
+            });
             if (local == null) {
-                res.status(404).send({ error: "Impossible to find this local" });
+                res.status(404).send({
+                    error: "Impossible to find this local"
+                });
             }
 
             res.json(local);
-        }
-        catch (err) {
-            console.error(`An error occured : ${err}`)
+        } catch (err) {
+            return res.status(400).json({
+                    error: "Something went wrong!"
+                }),
+                console.error(`An error occured : ${err}`)
         }
     });
 
@@ -38,48 +56,78 @@ module.exports = (app, db) => {
             const response = await db.collection("locals").insertOne(data);
 
             if (response.result.n !== 1 && response.result.ok !== 1) {
-                return res.status(400).json({ error: 'impossible to create local!' });
+                return res.status(400).json({
+                    error: 'impossible to create local!'
+                });
             }
             const [local] = response.ops;
 
-            res.json({ local });
-        }
-        catch (err) {
-            console.error(`An error occured : ${err}`)
-            res.json(err)
+            res.json({
+                local
+            });
+        } catch (err) {
+            return res.status(400).json({
+                    error: "Something went wrong!"
+                }),
+                console.error(`An error occured : ${err}`)
         }
     });
 
 
     //Mettre à jour un local
     app.post('/locals/:localId', async (req, res) => {
-        const { localId } = req.params;
-        const data = req.body;
+        try {
+            const {
+                localId
+            } = req.params;
+            const data = req.body;
 
-        const _id = new ObjectID(localId);
-        const response = await localsCollection.findOneAndUpdate(
-            { _id },
-            { $set: data },
-            { returnOriginal: false }
-        );
-        if (response.ok !== 1) {
-            return res.status(400).json({ error: 'Impossible to update the local' });
+            const _id = new ObjectID(localId);
+            const response = await localsCollection.findOneAndUpdate({
+                _id
+            }, {
+                $set: data
+            }, {
+                returnOriginal: false
+            });
+            if (response.ok !== 1) {
+                return res.status(400).json({
+                    error: 'Impossible to update the local'
+                });
+            }
+
+            res.json(response.value);
+        } catch (err) {
+            return res.status(400).json({
+                    error: "Something went wrong!"
+                }),
+                console.error(`An error occured : ${err}`)
         }
-
-        res.json(response.value);
     });
 
     //Supprimer un local
     app.delete('/locals/:localId', async (req, res) => {
-        const { localId } = req.params;
-        const _id = new ObjectID(localId);
+        try {
+            const {
+                localId
+            } = req.params;
+            const _id = new ObjectID(localId);
 
-        const response = await localsCollection.findOneAndDelete({ _id });
+            const response = await localsCollection.findOneAndDelete({
+                _id
+            });
 
-        if (response.value === null) {
-            return res.status(404).send({ error: "This local doesn't exist." })
+            if (response.value === null) {
+                return res.status(404).send({
+                    error: "This local doesn't exist."
+                })
+            }
+            res.status(204).send();
+        } catch (err) {
+            return res.status(400).json({
+                    error: "Something went wrong!"
+                }),
+                console.error(`An error occured : ${err}`)
         }
-
-        res.status(204).send();
     });
 }
