@@ -488,7 +488,7 @@ module.exports = (app, db) => {
             const classes = await teachersCollection.aggregate([{
                     $match: {
                         _id: new ObjectID(teacherId)
-                    }
+                    },
                 },
                 {
                     $unwind: "$course"
@@ -525,15 +525,12 @@ module.exports = (app, db) => {
                     }
                 },
                 {
-                    $project: {
-                        _id: 0,
-                        teacher: 1,
-                        discipline: 1,
-                        cours: 1,
-                        class: 1,
-                        option: 1,
-                        local: 1,
-                    }
+                    _id: 0,
+                    teacher: 1,
+                    cours: 1,
+                    class: 1,
+                    option: 1,
+                    local: 1,
                 },
                 {
                     $group: {

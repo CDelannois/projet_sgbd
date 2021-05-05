@@ -54,9 +54,9 @@ V	Comporter au minimum 4 collections.
 •	Chaque collection devra avoir son Schema Validation ==> En cours ==> Max
 V	Comporter au moins 3 requêtes d'aggregate ==> Charles
 V	Au moins 1 des collections doit comporter un sous document 
-•	Au moins 2 des collections devront contenir des références à d’autres collections, plus utilisez des lookup pour joindre les documents. => Un chacun (Classe ==> Local ==> Charles) ET (Ordinateur ==> Local ==> Max)
-•	Vous devrez créer les différentes routes vous permettant d’ajouter, modifier, consulter et supprimer les données (provenant de MongoDb) OK ==> Ajouter routes lookup
-•	Utiliser les codes HTTP et méthodes appropriés.
+V	Au moins 2 des collections devront contenir des références à d’autres collections, plus utilisez des lookup pour joindre les documents. => Un chacun (Classe ==> Local ==> Charles) ET (Ordinateur ==> Local ==> Max)
+V	Vous devrez créer les différentes routes vous permettant d’ajouter, modifier, consulter et supprimer les données (provenant de MongoDb) OK ==> Ajouter routes lookup
+V	Utiliser les codes HTTP et méthodes appropriés.
 •	A chaque endroit où vous posterez des informations, utilisez des validateurs afin de vérifier en amont les données.
 
 Le projet devra être versionné sous Github en mode privé et accessible par le chargé de cours. De plus, il est demandé de pousser vos changements en ligne à chaque fois que vous travaillerez sur le projet.
