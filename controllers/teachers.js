@@ -17,14 +17,13 @@ module.exports = (app, db) => {
     //Lister les professeurs
     app.get('/teachers', async (req, res) => {
         try {
-
             const teachers = await teachersCollection.find().toArray();
 
             res.json(teachers);
         } catch (err) {
             return res.status(400).json({
-                    error: "Something went wrong!"
-                }),
+                error: "Something went wrong!"
+            }),
                 console.error(`An error occured : ${err}`)
         }
     });
@@ -48,8 +47,8 @@ module.exports = (app, db) => {
             res.json(teacher);
         } catch (err) {
             return res.status(400).json({
-                    error: "Something went wrong!"
-                }),
+                error: "Something went wrong!"
+            }),
                 console.error(`An error occured : ${err}`)
         }
     });
@@ -66,11 +65,11 @@ module.exports = (app, db) => {
             let validate_discipline;
 
             if (validator.isLength(first_name, {
-                    min: 2,
-                    max: 45
-                }) && validator.isAlpha(first_name, "fr-FR", {
-                    ignore: " -"
-                })) {
+                min: 2,
+                max: 45
+            }) && validator.isAlpha(first_name, "fr-FR", {
+                ignore: " -"
+            })) {
                 validate_first_name = true;
             } else {
                 console.log("First name is required and can only contain letters.");
@@ -78,11 +77,11 @@ module.exports = (app, db) => {
             }
 
             if (validator.isLength(last_name, {
-                    min: 2,
-                    max: 45
-                }) && validator.isAlpha(last_name, "fr-FR", {
-                    ignore: " -"
-                })) {
+                min: 2,
+                max: 45
+            }) && validator.isAlpha(last_name, "fr-FR", {
+                ignore: " -"
+            })) {
                 validate_last_name = true;
             } else {
                 console.log("Last name is required and can only contain letters.");
@@ -90,11 +89,11 @@ module.exports = (app, db) => {
             }
 
             if (validator.isLength(discipline, {
-                    min: 2,
-                    max: 45
-                }) && validator.isAlpha(discipline, "fr-FR", {
-                    ignore: " -"
-                })) {
+                min: 2,
+                max: 45
+            }) && validator.isAlpha(discipline, "fr-FR", {
+                ignore: " -"
+            })) {
                 validate_discipline = true;
             } else {
                 console.log("Disciplines is required and can only contain letters.");
@@ -119,8 +118,8 @@ module.exports = (app, db) => {
 
         } catch (err) {
             return res.status(400).json({
-                    error: "Something went wrong!"
-                }),
+                error: "Something went wrong!"
+            }),
                 console.error(`An error occured : ${err}`)
         }
     });
@@ -144,11 +143,11 @@ module.exports = (app, db) => {
             let validate_discipline;
 
             if (validator.isLength(first_name, {
-                    min: 2,
-                    max: 45
-                }) && validator.isAlpha(first_name, "fr-FR", {
-                    ignore: " -"
-                })) {
+                min: 2,
+                max: 45
+            }) && validator.isAlpha(first_name, "fr-FR", {
+                ignore: " -"
+            })) {
                 validate_first_name = true;
             } else {
                 console.log("First name is required and can only contain letters.");
@@ -156,11 +155,11 @@ module.exports = (app, db) => {
             }
 
             if (validator.isLength(last_name, {
-                    min: 2,
-                    max: 45
-                }) && validator.isAlpha(last_name, "fr-FR", {
-                    ignore: " -"
-                })) {
+                min: 2,
+                max: 45
+            }) && validator.isAlpha(last_name, "fr-FR", {
+                ignore: " -"
+            })) {
                 validate_last_name = true;
             } else {
                 console.log("Last name is required and can only contain letters.");
@@ -168,11 +167,11 @@ module.exports = (app, db) => {
             }
 
             if (validator.isLength(discipline, {
-                    min: 2,
-                    max: 45
-                }) && validator.isAlpha(discipline, "fr-FR", {
-                    ignore: " -"
-                })) {
+                min: 2,
+                max: 45
+            }) && validator.isAlpha(discipline, "fr-FR", {
+                ignore: " -"
+            })) {
                 validate_discipline = true;
             } else {
                 console.log("Disciplines is required and can only contain letters.");
@@ -202,8 +201,8 @@ module.exports = (app, db) => {
 
         } catch (err) {
             return res.status(400).json({
-                    error: "Something went wrong!"
-                }),
+                error: "Something went wrong!"
+            }),
                 console.error(`An error occured : ${err}`)
         }
 
@@ -231,8 +230,8 @@ module.exports = (app, db) => {
             res.status(204).send();
         } catch (err) {
             return res.status(400).json({
-                    error: "Something went wrong!"
-                }),
+                error: "Something went wrong!"
+            }),
                 console.error(`An error occured : ${err}`)
         }
     });
@@ -247,41 +246,41 @@ module.exports = (app, db) => {
             } = req.params;
 
             const courses = await teachersCollection.aggregate([{
-                    $match: {
-                        _id: new ObjectID(teacherId)
-                    }
-                },
-                {
-                    $unwind: '$course'
-                },
-                {
-                    $project: {
-                        course: 1,
-                        _id: 0
-                    }
-                },
-                {
-                    $addFields: {
-                        label: '$course.label',
-                        grade: '$course.grade',
-                        group: '$course.group',
-                        _id: '$course._id',
-                    }
-                },
-                {
-                    $project: {
-                        label: 1,
-                        grade: 1,
-                        group: 1
-                    }
-                },
+                $match: {
+                    _id: new ObjectID(teacherId)
+                }
+            },
+            {
+                $unwind: '$course'
+            },
+            {
+                $project: {
+                    course: 1,
+                    _id: 0
+                }
+            },
+            {
+                $addFields: {
+                    label: '$course.label',
+                    grade: '$course.grade',
+                    group: '$course.group',
+                    _id: '$course._id',
+                }
+            },
+            {
+                $project: {
+                    label: 1,
+                    grade: 1,
+                    group: 1
+                }
+            },
             ]).toArray();
 
             res.json(courses);
         } catch (err) {
             return res.status(400).json({
-                    error: "Something went wrong!"
-                }),
+                error: "Something went wrong!"
+            }),
                 console.error(`An error occured : ${err}`)
         }
     });
@@ -304,9 +303,9 @@ module.exports = (app, db) => {
             let validate_group;
 
             if (validator.isLength(label, {
-                    min: 2,
-                    max: 25
-                })) {
+                min: 2,
+                max: 25
+            })) {
                 validate_label = true;
             } else {
                 validate_label = false;
@@ -314,16 +313,16 @@ module.exports = (app, db) => {
             }
 
             if (validator.isLength(grade, {
-                    max: 25
-                })) {
+                max: 25
+            })) {
                 validate_grade = true;
             } else {
                 validate_grade = false;
                 console.log("Grade is required. Max. 25 characters.")
             }
             if (validator.isLength(group, {
-                    max: 10
-                })) {
+                max: 10
+            })) {
                 validate_group = true;
             } else {
                 validate_group = false;
@@ -358,8 +357,8 @@ module.exports = (app, db) => {
             }
         } catch (err) {
             return res.status(400).json({
-                    error: "Something went wrong!"
-                }),
+                error: "Something went wrong!"
+            }),
                 console.error(`An error occured : ${err}`)
         }
     });
@@ -384,9 +383,9 @@ module.exports = (app, db) => {
             let validate_group;
 
             if (validator.isLength(label, {
-                    min: 2,
-                    max: 25
-                })) {
+                min: 2,
+                max: 25
+            })) {
                 validate_label = true;
             } else {
                 validate_label = false;
@@ -394,16 +393,16 @@ module.exports = (app, db) => {
             }
 
             if (validator.isLength(grade, {
-                    max: 25
-                })) {
+                max: 25
+            })) {
                 validate_grade = true;
             } else {
                 validate_grade = false;
                 console.log("Grade is required. Max. 25 characters.")
             }
             if (validator.isLength(group, {
-                    max: 10
-                })) {
+                max: 10
+            })) {
                 validate_group = true;
             } else {
                 validate_group = false;
@@ -437,8 +436,8 @@ module.exports = (app, db) => {
 
         } catch (err) {
             return res.status(400).json({
-                    error: "Something went wrong!"
-                }),
+                error: "Something went wrong!"
+            }),
                 console.error(`An error occured : ${err}`)
         }
     });
@@ -471,8 +470,8 @@ module.exports = (app, db) => {
             });
         } catch (err) {
             return res.status(400).json({
-                    error: "Something went wrong!"
-                }),
+                error: "Something went wrong!"
+            }),
                 console.error(`An error occured : ${err}`)
         }
     });
@@ -486,67 +485,67 @@ module.exports = (app, db) => {
             } = req.params;
 
             const classes = await teachersCollection.aggregate([{
-                    $match: {
-                        _id: new ObjectID(teacherId)
+                $match: {
+                    _id: new ObjectID(teacherId)
+                },
+            },
+            {
+                $unwind: "$course"
+            },
+            {
+                $lookup: {
+                    from: 'classes',
+                    let: {
+                        course_group: "$course.group"
                     },
-                },
-                {
-                    $unwind: "$course"
-                },
-                {
-                    $lookup: {
-                        from: 'classes',
-                        let: {
-                            course_group: "$course.group"
-                        },
-                        pipeline: [{
-                            $match: {
-                                $expr: {
-                                    $eq: ["$label", "$$course_group"]
-                                }
+                    pipeline: [{
+                        $match: {
+                            $expr: {
+                                $eq: ["$label", "$$course_group"]
                             }
-                        }],
-                        as: 'teacher_class',
-                    }
-                },
-                {
-                    $unwind: "$teacher_class"
-                },
-                {
-                    $addFields: {
-                        teacher: {
-                            $concat: ["$first_name", " ", "$last_name"]
-                        },
-                        cours: "$course.label",
-                        class: "$teacher_class.label",
-                        option: "$teacher_class.option",
-                        local: "$teacher_class.local",
-
-                    }
-                },
-                {
-                    _id: 0,
-                    teacher: 1,
-                    cours: 1,
-                    class: 1,
-                    option: 1,
-                    local: 1,
-                },
-                {
-                    $group: {
-                        _id: "$teacher",
-                        classes: {
-                            $push: "$$ROOT"
                         }
+                    }],
+                    as: 'teacher_class',
+                }
+            },
+            {
+                $unwind: "$teacher_class"
+            },
+            {
+                $addFields: {
+                    teacher: {
+                        $concat: ["$first_name", " ", "$last_name"]
+                    },
+                    cours: "$course.label",
+                    class: "$teacher_class.label",
+                    option: "$teacher_class.option",
+                    local: "$teacher_class.local",
+
+                }
+            },
+            {
+                _id: 0,
+                teacher: 1,
+                cours: 1,
+                class: 1,
+                option: 1,
+                local: 1,
+            },
+            {
+                $group: {
+                    _id: "$teacher",
+                    classes: {
+                        $push: "$$ROOT"
                     }
-                },
+                }
+            },
             ]).toArray();
 
             res.json(classes);
         } catch (err) {
             return res.status(400).json({
-                    error: "Something went wrong!"
-                }),
+                error: "Something went wrong!"
+            }),
                 console.error(`An error occured : ${err}`)
         }
     });

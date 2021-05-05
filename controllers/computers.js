@@ -18,8 +18,8 @@ module.exports = (app, db) => {
             res.json(computers);
         } catch (err) {
             return res.status(400).json({
-                    error: "Something went wrong!"
-                }),
+                error: "Something went wrong!"
+            }),
                 console.error(`An error occured : ${err}`)
         }
     });
@@ -43,8 +43,8 @@ module.exports = (app, db) => {
             res.json(computer);
         } catch (err) {
             return res.status(400).json({
-                    error: "Something went wrong!"
-                }),
+                error: "Something went wrong!"
+            }),
                 console.error(`An error occured : ${err}`)
         }
     });
@@ -68,8 +68,8 @@ module.exports = (app, db) => {
             });
         } catch (err) {
             return res.status(400).json({
-                    error: "Something went wrong!"
-                }),
+                error: "Something went wrong!"
+            }),
                 console.error(`An error occured : ${err}`)
         }
     });
@@ -100,8 +100,8 @@ module.exports = (app, db) => {
             res.json(response.value);
         } catch (err) {
             return res.status(400).json({
-                    error: "Something went wrong!"
-                }),
+                error: "Something went wrong!"
+            }),
                 console.error(`An error occured : ${err}`)
         }
     });
@@ -127,8 +127,8 @@ module.exports = (app, db) => {
             res.status(204).send();
         } catch (err) {
             return res.status(400).json({
-                    error: "Something went wrong!"
-                }),
+                error: "Something went wrong!"
+            }),
                 console.error(`An error occured : ${err}`)
         }
     });
@@ -143,39 +143,39 @@ module.exports = (app, db) => {
             } = req.params;
 
             const softwares = await computersCollection.aggregate([{
-                    $match: {
-                        _id: new ObjectID(computerId)
-                    }
-                },
-                {
-                    $unwind: '$software'
-                },
-                {
-                    $project: {
-                        software: 1,
-                        _id: 0
-                    }
-                },
-                {
-                    $addFields: {
-                        name: '$software.name',
-                        description: '$software.description',
-                        _id: '$software._id',
-                    }
-                },
-                {
-                    $project: {
-                        name: 1,
-                        description: 1
-                    }
-                },
+                $match: {
+                    _id: new ObjectID(computerId)
+                }
+            },
+            {
+                $unwind: '$software'
+            },
+            {
+                $project: {
+                    software: 1,
+                    _id: 0
+                }
+            },
+            {
+                $addFields: {
+                    name: '$software.name',
+                    description: '$software.description',
+                    _id: '$software._id',
+                }
+            },
+            {
+                $project: {
+                    name: 1,
+                    description: 1
+                }
+            },
             ]).toArray();
 
             res.json(softwares);
         } catch (err) {
             return res.status(400).json({
-                    error: "Something went wrong!"
-                }),
+                error: "Something went wrong!"
+            }),
                 console.error(`An error occured : ${err}`)
         }
     });
@@ -212,8 +212,8 @@ module.exports = (app, db) => {
             });
         } catch (err) {
             return res.status(400).json({
-                    error: "Something went wrong!"
-                }),
+                error: "Something went wrong!"
+            }),
                 console.error(`An error occured : ${err}`)
         }
     });
@@ -280,11 +280,12 @@ module.exports = (app, db) => {
 
     //Récupération de toutes les interventions
     app.get("/computers/:computerId/interventions", async (req, res) => {
-        const {
-            computerId
-        } = req.params;
+        try {
+            const {
+                computerId
+            } = req.params;
 
-        const interventions = await computersCollection.aggregate([{
+            const interventions = await computersCollection.aggregate([{
                 $match: {
                     _id: new ObjectID(computerId)
                 }
@@ -311,9 +312,28 @@ module.exports = (app, db) => {
                     object: 1
                 }
             },
-        ]).toArray();
+            ]).toArray();
 
-        res.json(interventions);
+            const interventions = await computersCollection.aggregate([
+                { $match: { _id: new ObjectID(computerId) } },
+                { $unwind: '$intervention' },
+                { $project: { intervention: 1, _id: 0 } },
+                {
+                    $addFields: {
+                        intervention_date: '$intervention.intervention_date',
+                        object: '$intervention.object',
+                        _id: '$intervention._id',
+                    }
+                },
+                { $project: { intervention_date: 1, object: 1 } },
+            ]).toArray();
+
+            res.json(interventions);
+        } catch (err) {
+            return res.status(400).json({
+                error: "An error occured : " + err
+            });
+        }
     });
 
     //Ajouter une intervention

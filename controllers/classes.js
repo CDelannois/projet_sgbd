@@ -153,9 +153,7 @@ module.exports = (app, db) => {
                 returnOriginal: false,
             })
 
-            if (response.result.n !== 1 && response.result.ok !== 1) {
-                return res.status(400).json({ error: 'Impossible to create students!' });
-            }
+            //vérifier requête avec code http
 
             res.json({ value });
         } catch (err) {
@@ -185,9 +183,7 @@ module.exports = (app, db) => {
                 returnOriginal: false,
             });
 
-            if ({ value }.result.ok !== 0) {
-                return res.status(400).json({ error: 'Impossible to create class :' });
-            }
+
 
             res.json({ value });
         } catch (err) {
@@ -241,6 +237,10 @@ module.exports = (app, db) => {
                     }
                 }
             ]).toArray();
+
+            if (local == 0) {
+
+            }
 
             res.json(local);
         } catch (err) {
