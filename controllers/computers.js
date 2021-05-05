@@ -3,6 +3,8 @@ const {
     ObjectID
 } = require('mongodb');
 
+const validation = require('./validators/computer_validation');
+
 module.exports = (app, db) => {
     if (!(db instanceof Db)) {
         throw new Error('Invalid Dabatase');
@@ -53,19 +55,28 @@ module.exports = (app, db) => {
     app.post('/computers', async (req, res) => {
         const data = req.body;
         try {
-            data.installation = new Date(data.installation);
-            const response = await db.collection("computers").insertOne(data);
 
-            if (response.result.n !== 1 && response.result.ok !== 1) {
-                return res.status(400).json({
-                    error: 'impossible to create computer!'
+            let computer_ok = validation.computer_validation(data.computer_name, data.operating_system, data.disk_type, data.disk_capacity, data.installation)
+            if (computer_ok == true) {
+                data.installation = new Date(data.installation);
+                const response = await db.collection("computers").insertOne(data);
+
+                if (response.result.n !== 1 && response.result.ok !== 1) {
+                    return res.status(400).json({
+                        error: 'impossible to create computer!'
+                    });
+                }
+                const [computer] = response.ops;
+
+                res.json({
+                    computer
                 });
+            } else {
+                console.log("One or several fields aren't correctly filled.");
+                return res.status(400).json({
+                    error: "One or several fields aren't correctly filled."
+                })
             }
-            const [computer] = response.ops;
-
-            res.json({
-                computer
-            });
         } catch (err) {
             return res.status(400).json({
                 error: "Something went wrong!"
@@ -83,21 +94,30 @@ module.exports = (app, db) => {
             } = req.params;
             const data = req.body;
 
-            const _id = new ObjectID(computerId);
-            const response = await computersCollection.findOneAndUpdate({
-                _id
-            }, {
-                $set: data
-            }, {
-                returnOriginal: false
-            });
-            if (response.ok !== 1) {
-                return res.status(400).json({
-                    error: 'Impossible to update the computer'
-                });
-            }
+            let computer_ok = validation.computer_validation(data.computer_name, data.operating_system, data.disk_type, data.disk_capacity, data.installation)
+            if (computer_ok == true) {
 
-            res.json(response.value);
+                const _id = new ObjectID(computerId);
+                const response = await computersCollection.findOneAndUpdate({
+                    _id
+                }, {
+                    $set: data
+                }, {
+                    returnOriginal: false
+                });
+                if (response.ok !== 1) {
+                    return res.status(400).json({
+                        error: 'Impossible to update the computer'
+                    });
+                }
+
+                res.json(response.value);
+            } else {
+                console.log("One or several fields aren't correctly filled.");
+                return res.status(400).json({
+                    error: "One or several fields aren't correctly filled."
+                })
+            }
         } catch (err) {
             return res.status(400).json({
                 error: "Something went wrong!"
@@ -192,24 +212,33 @@ module.exports = (app, db) => {
             } = req.body;
             const _id = new ObjectID(computerId);
 
-            const {
-                value
-            } = await computersCollection.findOneAndUpdate({
-                _id
-            }, {
-                $push: {
-                    software: {
-                        name,
-                        description,
-                        _id: new ObjectID()
+            let software_ok = validation.software_validation(name, description)
+            if (software_ok == true) {
+
+                const {
+                    value
+                } = await computersCollection.findOneAndUpdate({
+                    _id
+                }, {
+                    $push: {
+                        software: {
+                            name,
+                            description,
+                            _id: new ObjectID()
+                        }
                     }
-                }
-            }, {
-                returnOriginal: false,
-            })
-            res.json({
-                value
-            });
+                }, {
+                    returnOriginal: false,
+                })
+                res.json({
+                    value
+                });
+            } else {
+                console.log("One or several fields aren't correctly filled.");
+                return res.status(400).json({
+                    error: "One or several fields aren't correctly filled."
+                })
+            }
         } catch (err) {
             return res.status(400).json({
                 error: "Something went wrong!"

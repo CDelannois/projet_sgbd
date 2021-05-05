@@ -3,9 +3,7 @@ const {
     ObjectID
 } = require('mongodb');
 
-const {
-    default: course_validation
-} = require('./validators/teacher_validation');
+const validation = require('./validators/teacher_validation');
 
 
 
@@ -59,49 +57,9 @@ module.exports = (app, db) => {
     app.post('/teachers', async (req, res) => {
         const data = req.body;
         try {
-            const first_name = data.first_name;
-            let validate_first_name;
-            const last_name = data.last_name;
-            let validate_last_name;
-            const discipline = data.discipline;
-            let validate_discipline;
+            let teacher_ok = validation.teacher_validation(data.first_name, data.last_name, data.discipline);
 
-            if (validator.isLength(first_name, {
-                min: 2,
-                max: 45
-            }) && validator.isAlpha(first_name, "fr-FR", {
-                ignore: " -"
-            })) {
-                validate_first_name = true;
-            } else {
-                console.log("First name is required and can only contain letters.");
-                validate_first_name = false;
-            }
-
-            if (validator.isLength(last_name, {
-                min: 2,
-                max: 45
-            }) && validator.isAlpha(last_name, "fr-FR", {
-                ignore: " -"
-            })) {
-                validate_last_name = true;
-            } else {
-                console.log("Last name is required and can only contain letters.");
-                validate_last_name = false;
-            }
-
-            if (validator.isLength(discipline, {
-                min: 2,
-                max: 45
-            }) && validator.isAlpha(discipline, "fr-FR", {
-                ignore: " -"
-            })) {
-                validate_discipline = true;
-            } else {
-                console.log("Disciplines is required and can only contain letters.");
-                validate_discipline = false;
-            }
-            if (validate_discipline == true && validate_first_name == true && validate_last_name == true) {
+            if (teacher_ok == true) {
                 const response = await db.collection("teachers").insertOne(data);
                 if (response.result.n !== 1 && response.result.ok !== 1) {
                     return res.status(400).json({
@@ -116,6 +74,9 @@ module.exports = (app, db) => {
 
             } else {
                 console.log("One or several fields aren't correctly filled.");
+                return res.status(400).json({
+                    error: "One or several fields aren't correctly filled."
+                })
             }
 
         } catch (err) {
@@ -137,49 +98,9 @@ module.exports = (app, db) => {
 
             const _id = new ObjectID(teacherId);
 
-            const first_name = data.first_name;
-            let validate_first_name;
-            const last_name = data.last_name;
-            let validate_last_name;
-            const discipline = data.discipline;
-            let validate_discipline;
+            let teacher_ok = validation.teacher_validation(data.first_name, data.last_name, data.discipline);
 
-            if (validator.isLength(first_name, {
-                min: 2,
-                max: 45
-            }) && validator.isAlpha(first_name, "fr-FR", {
-                ignore: " -"
-            })) {
-                validate_first_name = true;
-            } else {
-                console.log("First name is required and can only contain letters.");
-                validate_first_name = false;
-            }
-
-            if (validator.isLength(last_name, {
-                min: 2,
-                max: 45
-            }) && validator.isAlpha(last_name, "fr-FR", {
-                ignore: " -"
-            })) {
-                validate_last_name = true;
-            } else {
-                console.log("Last name is required and can only contain letters.");
-                validate_last_name = false;
-            }
-
-            if (validator.isLength(discipline, {
-                min: 2,
-                max: 45
-            }) && validator.isAlpha(discipline, "fr-FR", {
-                ignore: " -"
-            })) {
-                validate_discipline = true;
-            } else {
-                console.log("Disciplines is required and can only contain letters.");
-                validate_discipline = false;
-            }
-            if (validate_discipline == true && validate_first_name == true && validate_last_name == true) {
+            if (teacher_ok == true) {
                 const response = await teachersCollection.findOneAndUpdate({
                     _id
                 }, {
@@ -193,7 +114,6 @@ module.exports = (app, db) => {
                     });
                 }
                 res.json(response.value);
-
             } else {
                 console.log("One or several fields aren't correctly filled.");
                 res.status(400).json({
@@ -300,7 +220,7 @@ module.exports = (app, db) => {
             } = req.body;
             const _id = new ObjectID(teacherId);
 
-            let course_ok = course_validation(label, grade, group)
+            let course_ok = validation.course_validation(label, grade, group);
 
             if (course_ok == true) {
                 const {
@@ -351,38 +271,9 @@ module.exports = (app, db) => {
             const _id = new ObjectID(teacherId);
             const _courseId = new ObjectID(courseId);
 
-            let validate_label;
-            let validate_grade;
-            let validate_group;
+            let course_ok = validation.course_validation(label, grade, group);
 
-            if (validator.isLength(label, {
-                min: 2,
-                max: 25
-            })) {
-                validate_label = true;
-            } else {
-                validate_label = false;
-                console.log("Label is required. Max. 25 characters.")
-            }
-
-            if (validator.isLength(grade, {
-                max: 25
-            })) {
-                validate_grade = true;
-            } else {
-                validate_grade = false;
-                console.log("Grade is required. Max. 25 characters.")
-            }
-            if (validator.isLength(group, {
-                max: 10
-            })) {
-                validate_group = true;
-            } else {
-                validate_group = false;
-                console.log("Group is required. Max. 10 characters.")
-            }
-
-            if (validate_group == true && validate_label == true && validate_grade == true) {
+            if (course_ok == true) {
                 const {
                     value
                 } = await teachersCollection.findOneAndUpdate({
