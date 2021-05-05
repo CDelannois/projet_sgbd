@@ -314,20 +314,6 @@ module.exports = (app, db) => {
             },
             ]).toArray();
 
-            const interventions = await computersCollection.aggregate([
-                { $match: { _id: new ObjectID(computerId) } },
-                { $unwind: '$intervention' },
-                { $project: { intervention: 1, _id: 0 } },
-                {
-                    $addFields: {
-                        intervention_date: '$intervention.intervention_date',
-                        object: '$intervention.object',
-                        _id: '$intervention._id',
-                    }
-                },
-                { $project: { intervention_date: 1, object: 1 } },
-            ]).toArray();
-
             res.json(interventions);
         } catch (err) {
             return res.status(400).json({
