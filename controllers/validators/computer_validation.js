@@ -67,7 +67,7 @@ module.exports = {
             validate_installation = true;
         } else {
             validate_installation = false;
-            console.log("Installation date is required, and must be YYYY/MM/DD format.");
+            console.log("Installation date is required, and must respect YYYY/MM/DD format.");
         }
 
         if (validate_computer_name == true && validate_operating_system == true && validate_disk_type == true && validate_disk_capacity == true && validate_installation == true) {
@@ -105,6 +105,34 @@ module.exports = {
         if (validate_name == true && validate_description == true) {
             return true;
         } else {
+            return false;
+        }
+    },
+
+    intervention_validation: function (date, object) {
+        let validate_date;
+        let validate_object;
+
+        if (validator.isDate(date)) {
+            validate_date = true;
+        } else {
+            validate_date = false;
+            console.log("Date is required, must respect YYYY/MM/DD format.");
+        }
+
+        if (validator.isLength(object, {
+            min: 20,
+            max: 500
+        })) {
+            validate_object = true;
+        } else {
+            validate_object = false;
+            console.log("Object description is required, max. 500 characters.");
+        }
+
+        if (validate_object == true && validate_date == true){
+            return true;
+        }else{
             return false;
         }
     }

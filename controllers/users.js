@@ -1,6 +1,6 @@
-//https://www.youtube.com/watch?v=Vh-06zJE0Jo
-
-const { Db, ObjectID } = require("mongodb");
+const {
+    Db, ObjectID
+} = require("mongodb");
 const bcrypt = require('bcrypt');
 const passport = require('passport');
 const saltRound = 10;

@@ -214,7 +214,6 @@ module.exports = (app, db) => {
 
             let software_ok = validation.software_validation(name, description)
             if (software_ok == true) {
-
                 const {
                     value
                 } = await computersCollection.findOneAndUpdate({
@@ -249,60 +248,82 @@ module.exports = (app, db) => {
 
     //Modifier un logiciel
     app.post('/computers/:computerId/softwares/:softwareId', async (req, res) => {
-        const {
-            computerId,
-            softwareId
-        } = req.params;
-        const {
-            name,
-            description
-        } = req.body;
-        const _id = new ObjectID(computerId);
-        const _softwareId = new ObjectID(softwareId);
+        try {
+            const {
+                computerId,
+                softwareId
+            } = req.params;
+            const {
+                name,
+                description
+            } = req.body;
+            const _id = new ObjectID(computerId);
+            const _softwareId = new ObjectID(softwareId);
 
-        const {
-            value
-        } = await computersCollection.findOneAndUpdate({
-            _id,
-            'software._id': _softwareId
-        }, {
-            $set: {
-                'software.$.name': name,
-                'software.$.description': description,
+            let software_ok = validation.software_validation(name, description)
+            if (software_ok == true) {
+                const {
+                    value
+                } = await computersCollection.findOneAndUpdate({
+                    _id,
+                    'software._id': _softwareId
+                }, {
+                    $set: {
+                        'software.$.name': name,
+                        'software.$.description': description,
+                    }
+                }, {
+                    returnOriginal: false,
+                });
+                res.json({
+                    value
+                });
+            } else {
+                console.log("One or several fields aren't correctly filled.");
+                return res.status(400).json({
+                    error: "One or several fields aren't correctly filled."
+                })
             }
-        }, {
-            returnOriginal: false,
-        });
-        res.json({
-            value
-        });
+        } catch (err) {
+            return res.status(400).json({
+                error: "Something went wrong!"
+            }),
+                console.error(`An error occured : ${err}`)
+        }
     });
 
     //Supprimer un logiciel
     app.delete('/computers/:computerId/softwares/:softwareId', async (req, res) => {
-        const {
-            computerId,
-            softwareId
-        } = req.params;
-        const _id = new ObjectID(computerId);
-        const _softwareId = new ObjectID(softwareId);
+        try {
+            const {
+                computerId,
+                softwareId
+            } = req.params;
+            const _id = new ObjectID(computerId);
+            const _softwareId = new ObjectID(softwareId);
 
-        const {
-            value
-        } = await computersCollection.findOneAndUpdate({
-            _id
-        }, {
-            $pull: {
-                software: {
-                    _id: _softwareId
+            const {
+                value
+            } = await computersCollection.findOneAndUpdate({
+                _id
+            }, {
+                $pull: {
+                    software: {
+                        _id: _softwareId
+                    }
                 }
-            }
-        }, {
-            returnOriginal: false,
-        })
-        res.json({
-            value
-        });
+            }, {
+                returnOriginal: false,
+            })
+            res.json({
+                value
+            });
+        } catch (err) {
+            return res.status(400).json({
+                error: "Something went wrong!"
+            }),
+                console.error(`An error occured : ${err}`)
+        }
     });
 
     //_____________________________________________________________________Interventions________________________________________________________________________________________
@@ -353,92 +374,131 @@ module.exports = (app, db) => {
 
     //Ajouter une intervention
     app.post('/computers/:computerId/interventions', async (req, res) => {
-        const {
-            computerId
-        } = req.params;
-        const {
-            date,
-            object
-        } = req.body;
-        const intervention_date = new Date(date);
-        const _id = new ObjectID(computerId);
+        try {
+            const {
+                computerId
+            } = req.params;
+            const {
+                date,
+                object
+            } = req.body;
+            const intervention_date = new Date(date);
+            const _id = new ObjectID(computerId);
 
-        const {
-            value
-        } = await computersCollection.findOneAndUpdate({
-            _id
-        }, {
-            $push: {
-                intervention: {
-                    intervention_date,
-                    object,
-                    _id: new ObjectID()
-                }
+            let intervention_ok = validation.intervention_validation(date, object);
+
+            if (intervention_ok == true) {
+                const {
+                    value
+                } = await computersCollection.findOneAndUpdate({
+                    _id
+                }, {
+                    $push: {
+                        intervention: {
+                            intervention_date,
+                            object,
+                            _id: new ObjectID()
+                        }
+                    }
+                }, {
+                    returnOriginal: false,
+                })
+                res.json({
+                    value
+                });
+            } else {
+                console.log("One or several fields aren't correctly filled.");
+                return res.status(400).json({
+                    error: "One or several fields aren't correctly filled."
+                })
             }
-        }, {
-            returnOriginal: false,
-        })
-        res.json({
-            value
-        });
+        } catch (err) {
+            return res.status(400).json({
+                error: "Something went wrong!"
+            }),
+                console.error(`An error occured : ${err}`)
+        }
     });
 
     //Modifier une intervention
     app.post('/computers/:computerId/interventions/:interventionId', async (req, res) => {
-        const {
-            computerId,
-            interventionId
-        } = req.params;
-        const {
-            date,
-            object
-        } = req.body;
-        const intervention_date = new Date(date)
-        const _id = new ObjectID(computerId);
-        const _interventionId = new ObjectID(interventionId);
+        try {
+            const {
+                computerId,
+                interventionId
+            } = req.params;
+            const {
+                date,
+                object
+            } = req.body;
+            const intervention_date = new Date(date)
+            const _id = new ObjectID(computerId);
+            const _interventionId = new ObjectID(interventionId);
 
-        const {
-            value
-        } = await computersCollection.findOneAndUpdate({
-            _id,
-            'intervention._id': _interventionId
-        }, {
-            $set: {
-                'intervention.$.intervention_date': intervention_date,
-                'intervention.$.object': object,
+            let intervention_ok = validation.intervention_validation(date, object);
+
+            if (intervention_ok == true) {
+                const {
+                    value
+                } = await computersCollection.findOneAndUpdate({
+                    _id,
+                    'intervention._id': _interventionId
+                }, {
+                    $set: {
+                        'intervention.$.intervention_date': intervention_date,
+                        'intervention.$.object': object,
+                    }
+                }, {
+                    returnOriginal: false,
+                });
+                res.json({
+                    value
+                });
+            } else {
+                console.log("One or several fields aren't correctly filled.");
+                return res.status(400).json({
+                    error: "One or several fields aren't correctly filled."
+                })
             }
-        }, {
-            returnOriginal: false,
-        });
-        res.json({
-            value
-        });
+        } catch (err) {
+            return res.status(400).json({
+                error: "Something went wrong!"
+            }),
+                console.error(`An error occured : ${err}`)
+        }
     });
 
     //Supprimer une intervention
     app.delete('/computers/:computerId/interventions/:interventionId', async (req, res) => {
-        const {
-            computerId,
-            interventionId
-        } = req.params;
-        const _id = new ObjectID(computerId);
-        const _interventionId = new ObjectID(interventionId);
+        try {
+            const {
+                computerId,
+                interventionId
+            } = req.params;
+            const _id = new ObjectID(computerId);
+            const _interventionId = new ObjectID(interventionId);
 
-        const {
-            value
-        } = await computersCollection.findOneAndUpdate({
-            _id
-        }, {
-            $pull: {
-                intervention: {
-                    _id: _interventionId
+            const {
+                value
+            } = await computersCollection.findOneAndUpdate({
+                _id
+            }, {
+                $pull: {
+                    intervention: {
+                        _id: _interventionId
+                    }
                 }
-            }
-        }, {
-            returnOriginal: false,
-        })
-        res.json({
-            value
-        });
+            }, {
+                returnOriginal: false,
+            })
+            res.json({
+                value
+            });
+        } catch (err) {
+            return res.status(400).json({
+                error: "Something went wrong!"
+            }),
+                console.error(`An error occured : ${err}`)
+        }
     });
 }

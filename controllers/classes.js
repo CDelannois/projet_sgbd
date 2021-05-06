@@ -1,4 +1,9 @@
-const { Db, ObjectID } = require('mongodb');
+const {
+    Db, ObjectID
+} = require('mongodb');
+
+const validation = require('./validators/computer_validation');
+
 
 module.exports = (app, db) => {
     if (!(db instanceof Db)) {
@@ -44,14 +49,24 @@ module.exports = (app, db) => {
     app.post('/classes', async (req, res) => {
         const data = req.body;
         try {
-            const response = await db.collection("classes").insertOne(data);
 
-            if (response.result.n !== 1 && response.result.ok !== 1) {
-                return res.status(400).json({ error: 'Impossible to create class :' });
+            let class_ok = validation.class_validation(data.label, data.option, data.local)
+
+            if (class_ok == true) {
+                const response = await db.collection("classes").insertOne(data);
+
+                if (response.result.n !== 1 && response.result.ok !== 1) {
+                    return res.status(400).json({ error: 'Impossible to create class :' });
+                }
+                const [classe] = response.ops;
+
+                res.json({ classe });
+            } else {
+                console.log("One or several fields aren't correctly filled.");
+                return res.status(400).json({
+                    error: "One or several fields aren't correctly filled."
+                })
             }
-            const [classe] = response.ops;
-
-            res.json({ classe });
         } catch (err) {
             return res.status(400).json({
                 error: "An error occured : " + err
@@ -67,15 +82,25 @@ module.exports = (app, db) => {
             const data = req.body;
 
             const _id = new ObjectID(classeId);
-            const response = await classesCollection.findOneAndUpdate(
-                { _id },
-                { $set: data },
-                { returnOriginal: false }
-            );
-            if (response.ok !== 1) {
-                return res.status(400).json({ error: 'Impossible to update the class' });
+
+            let class_ok = validation.class_validation(data.label, data.option, data.local)
+
+            if (class_ok == true) {
+                const response = await classesCollection.findOneAndUpdate(
+                    { _id },
+                    { $set: data },
+                    { returnOriginal: false }
+                );
+                if (response.ok !== 1) {
+                    return res.status(400).json({ error: 'Impossible to update the class' });
+                }
+                res.json(response.value);
+            } else {
+                console.log("One or several fields aren't correctly filled.");
+                return res.status(400).json({
+                    error: "One or several fields aren't correctly filled."
+                })
             }
-            res.json(response.value);
         } catch (err) {
             return res.status(400).json({
                 error: "An error occured : " + err
@@ -145,17 +170,23 @@ module.exports = (app, db) => {
             const { last_name, first_name } = req.body;
             const _id = new ObjectID(classeId);
 
-            const { value } = await classesCollection.findOneAndUpdate({
-                _id
-            }, {
-                $push: { student: { last_name, first_name, _id: new ObjectID() } }
-            }, {
-                returnOriginal: false,
-            })
+            let student_ok = validation.class_validation(last_name, first_name)
 
-            //vérifier requête avec code http
-
-            res.json({ value });
+            if (student_ok == true) {
+                const { value } = await classesCollection.findOneAndUpdate({
+                    _id
+                }, {
+                    $push: { student: { last_name, first_name, _id: new ObjectID() } }
+                }, {
+                    returnOriginal: false,
+                })
+                res.json({ value });
+            } else {
+                console.log("One or several fields aren't correctly filled.");
+                return res.status(400).json({
+                    error: "One or several fields aren't correctly filled."
+                })
+            }
         } catch (err) {
             return res.status(400).json({
                 error: "An error occured : " + err
@@ -171,21 +202,27 @@ module.exports = (app, db) => {
             const _id = new ObjectID(classeId);
             const _studentId = new ObjectID(studentId);
 
-            const { value } = await classesCollection.findOneAndUpdate({
-                _id,
-                'student._id': _studentId
-            }, {
-                $set: {
-                    'student.$.last_name': last_name,
-                    'student.$.first_name': first_name,
-                }
-            }, {
-                returnOriginal: false,
-            });
+            let student_ok = validation.class_validation(last_name, first_name)
 
-
-
-            res.json({ value });
+            if (student_ok == true) {
+                const { value } = await classesCollection.findOneAndUpdate({
+                    _id,
+                    'student._id': _studentId
+                }, {
+                    $set: {
+                        'student.$.last_name': last_name,
+                        'student.$.first_name': first_name,
+                    }
+                }, {
+                    returnOriginal: false,
+                });
+                res.json({ value });
+            } else {
+                console.log("One or several fields aren't correctly filled.");
+                return res.status(400).json({
+                    error: "One or several fields aren't correctly filled."
+                })
+            }
         } catch (err) {
             return res.status(400).json({
                 error: "An error occured : " + err

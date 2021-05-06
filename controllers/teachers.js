@@ -71,14 +71,12 @@ module.exports = (app, db) => {
                 res.json({
                     teacher
                 });
-
             } else {
                 console.log("One or several fields aren't correctly filled.");
                 return res.status(400).json({
                     error: "One or several fields aren't correctly filled."
                 })
             }
-
         } catch (err) {
             return res.status(400).json({
                 error: "Something went wrong!"

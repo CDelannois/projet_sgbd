@@ -3,6 +3,9 @@ const {
     ObjectID
 } = require('mongodb');
 
+const validation = require('./validators/locals_validation');
+
+
 module.exports = (app, db) => {
     if (!(db instanceof Db)) {
         throw new Error('Invalid Dabatase');
@@ -18,8 +21,8 @@ module.exports = (app, db) => {
             res.json(locals);
         } catch (err) {
             return res.status(400).json({
-                    error: "Something went wrong!"
-                }),
+                error: "Something went wrong!"
+            }),
                 console.error(`An error occured : ${err}`)
         }
     });
@@ -43,8 +46,8 @@ module.exports = (app, db) => {
             res.json(local);
         } catch (err) {
             return res.status(400).json({
-                    error: "Something went wrong!"
-                }),
+                error: "Something went wrong!"
+            }),
                 console.error(`An error occured : ${err}`)
         }
     });
@@ -53,22 +56,32 @@ module.exports = (app, db) => {
     app.post('/locals', async (req, res) => {
         const data = req.body;
         try {
-            const response = await db.collection("locals").insertOne(data);
 
-            if (response.result.n !== 1 && response.result.ok !== 1) {
-                return res.status(400).json({
-                    error: 'impossible to create local!'
+            let local_ok = validation.local_validation(label, type);
+
+            if (local_ok == true) {
+                const response = await db.collection("locals").insertOne(data);
+
+                if (response.result.n !== 1 && response.result.ok !== 1) {
+                    return res.status(400).json({
+                        error: 'impossible to create local!'
+                    });
+                }
+                const [local] = response.ops;
+
+                res.json({
+                    local
                 });
+            } else {
+                console.log("One or several fields aren't correctly filled.");
+                return res.status(400).json({
+                    error: "One or several fields aren't correctly filled."
+                })
             }
-            const [local] = response.ops;
-
-            res.json({
-                local
-            });
         } catch (err) {
             return res.status(400).json({
-                    error: "Something went wrong!"
-                }),
+                error: "Something went wrong!"
+            }),
                 console.error(`An error occured : ${err}`)
         }
     });
@@ -81,26 +94,34 @@ module.exports = (app, db) => {
                 localId
             } = req.params;
             const data = req.body;
-
             const _id = new ObjectID(localId);
-            const response = await localsCollection.findOneAndUpdate({
-                _id
-            }, {
-                $set: data
-            }, {
-                returnOriginal: false
-            });
-            if (response.ok !== 1) {
-                return res.status(400).json({
-                    error: 'Impossible to update the local'
-                });
-            }
 
-            res.json(response.value);
+            let local_ok = validation.local_validation(label, type);
+
+            if (local_ok == true) {
+                const response = await localsCollection.findOneAndUpdate({
+                    _id
+                }, {
+                    $set: data
+                }, {
+                    returnOriginal: false
+                });
+                if (response.ok !== 1) {
+                    return res.status(400).json({
+                        error: 'Impossible to update the local'
+                    });
+                }
+                res.json(response.value);
+            } else {
+                console.log("One or several fields aren't correctly filled.");
+                return res.status(400).json({
+                    error: "One or several fields aren't correctly filled."
+                })
+            }
         } catch (err) {
             return res.status(400).json({
-                    error: "Something went wrong!"
-                }),
+                error: "Something went wrong!"
+            }),
                 console.error(`An error occured : ${err}`)
         }
     });
@@ -125,8 +146,8 @@ module.exports = (app, db) => {
             res.status(204).send();
         } catch (err) {
             return res.status(400).json({
-                    error: "Something went wrong!"
-                }),
+                error: "Something went wrong!"
+            }),
                 console.error(`An error occured : ${err}`)
         }
     });
