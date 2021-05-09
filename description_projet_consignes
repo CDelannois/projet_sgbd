@@ -7,6 +7,7 @@ Collections:
     o	Type de disque
     o	Capacité du disque
     o	Date d'installation
+    o   Local
     o	Sous document 1:
         	Liste des logiciels
             •	Nom
@@ -15,9 +16,11 @@ Collections:
         	Liste des interventions
             •	Date
             •	Objet
-            •	Local:
+
+•	Local:
     o	Numéro du local
     o	Type de classe (normale, labo info, labo science, etc.)
+
 •	Professeurs
     o	Nom
     o	Prénom
@@ -26,14 +29,17 @@ Collections:
         	Liste des cours
             •	Intitulé
             •	Année
-            •	Classe (1A, 3Q, etc.)
+            •	Classe (Libellé de la collection classes)
+
 •	Classes
-    o	Année
+    o	Libellé
     o	Option
     o	Sous document:
         	Liste des élèves
             •	Nom
             •	Prénom
+    o   Local (numéro du local de la collection local)
+
 
 Projet de développement SGBD
 
@@ -42,16 +48,16 @@ Pour ce projet, il vous est demandé de développer une API REST qui va interagi
 
 Le projet sera à réaliser seul ou par groupe de 2 et devra respecter les contraintes suivantes :
 
-•	Être développé en NODEJS via le Framework Express
-•	Interagir avec MongoDB via le driver NODEJS MongoDB (ne pas utiliser Mongoose)
-•	Comporter au minimum 4 collections.
-•	Chaque collection devra avoir son Schema Validation
-•	Comporter au moins 3 requêtes d'aggregate
-•	Au moins 1 des collections doit comporter un sous document 
-•	Au moins 2 des collections devront contenir des références à d’autres collections, plus utilisez des lookup pour joindre les documents.
-•	Vous devrez créer les différentes routes vous permettant d’ajouter, modifier, consulter et supprimer les données (provenant de MongoDb)
-•	Utiliser les codes HTTP et méthodes appropriés.
-•	A chaque endroit où vous posterez des informations, utilisez des validateurs afin de vérifier en amont les données.
+V	Être développé en NODEJS via le Framework Express
+V	Interagir avec MongoDB via le driver NODEJS MongoDB (ne pas utiliser Mongoose)
+V	Comporter au minimum 4 collections.
+•	Chaque collection devra avoir son Schema Validation ==> En cours ==> Max
+V	Comporter au moins 3 requêtes d'aggregate ==> Charles
+V	Au moins 1 des collections doit comporter un sous document 
+V	Au moins 2 des collections devront contenir des références à d’autres collections, plus utilisez des lookup pour joindre les documents. => Un chacun (Classe ==> Local ==> Charles) ET (Ordinateur ==> Local ==> Max)
+V	Vous devrez créer les différentes routes vous permettant d’ajouter, modifier, consulter et supprimer les données (provenant de MongoDb) OK ==> Ajouter routes lookup
+V	Utiliser les codes HTTP et méthodes appropriés.
+V	A chaque endroit où vous posterez des informations, utilisez des validateurs afin de vérifier en amont les données.
 
 Le projet devra être versionné sous Github en mode privé et accessible par le chargé de cours. De plus, il est demandé de pousser vos changements en ligne à chaque fois que vous travaillerez sur le projet.
 
@@ -61,3 +67,4 @@ Attention : Ne commencez pas le développement sans validation au préalable et 
 
 L’application devra être remise au plus tard le mercredi 10 mai par email à l’adresse suivante : samuel.lassoie@gmail.com.
 
+ssh- L localhost:27033:localhost:27017 ecole@135.125.95.178
