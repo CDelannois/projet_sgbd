@@ -1,0 +1,51 @@
+[{
+  "_id": {
+    "$oid": "607edbc8776347494c20d685"
+  },
+  "first_name": "Charles",
+  "last_name": "Delannois",
+  "discipline": "Sciences humaines",
+  "course": [
+    {
+      "label": "EDM",
+      "grade": "1ère commune",
+      "group": "1C1",
+      "_id": {
+        "$oid": "607edc07776347494c20d687"
+      }
+    },
+    {
+      "label": "FHG",
+      "grade": "3e professionnelle",
+      "group": "3P2",
+      "_id": {
+        "$oid": "607edc20776347494c20d688"
+      }
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "607edbd8776347494c20d686"
+  },
+  "first_name": "Marie",
+  "last_name": "Favier",
+  "discipline": "Français",
+  "course": [
+    {
+      "label": "Français",
+      "grade": "3e générale",
+      "group": "3B4",
+      "_id": {
+        "$oid": "607edc7f776347494c20d68b"
+      }
+    },
+    {
+      "label": "Français",
+      "grade": "3e générale",
+      "group": "3B2",
+      "_id": {
+        "$oid": "607edc84776347494c20d68c"
+      }
+    }
+  ]
+}]
