@@ -77,6 +77,7 @@ module.exports = {
             console.log("Grade is required. Max. 25 characters.")
         }
         if (validator.isLength(group, {
+            min: 1,
             max: 10
         })) {
             validate_group = true;

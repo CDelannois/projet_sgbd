@@ -121,7 +121,7 @@ module.exports = {
         }
 
         if (validator.isLength(object, {
-            min: 20,
+            min: 10,
             max: 500
         })) {
             validate_object = true;
