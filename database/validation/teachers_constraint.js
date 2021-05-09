@@ -31,7 +31,7 @@ module.exports = async (db) => {
                             required: ["label", "grade", "group"],
                             properties: {
                                 label: {
-                                    bsonType: "date",
+                                    bsonType: "string",
                                     description: "must be a date and is required",
                                 },
                                 grade: {
