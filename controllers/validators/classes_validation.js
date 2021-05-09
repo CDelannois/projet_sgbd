@@ -19,7 +19,7 @@ module.exports = {
         }
 
         if (validator.isLength(option, {
-            min: 3,
+            min: 1,
             max: 50
         })) {
             validate_option = true;

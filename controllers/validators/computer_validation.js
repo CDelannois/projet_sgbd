@@ -93,7 +93,7 @@ module.exports = {
         }
 
         if (validator.isLength(description, {
-            min: 20,
+            min: 10,
             max: 500
         })) {
             validate_description = true;
