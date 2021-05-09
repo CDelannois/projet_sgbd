@@ -386,12 +386,14 @@ module.exports = (app, db) => {
                 }
             },
             {
-                _id: 0,
-                teacher: 1,
-                cours: 1,
-                class: 1,
-                option: 1,
-                local: 1,
+                $project: {
+                    _id: 0,
+                    teacher: 1,
+                    cours: 1,
+                    class: 1,
+                    option: 1,
+                    local: 1,
+                },
             },
             {
                 $group: {

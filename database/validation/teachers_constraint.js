@@ -5,61 +5,41 @@ module.exports = async (db) => {
         return;
     }
 
-    /*await db.createCollection(collectionName, {
+    await db.createCollection(collectionName, {
         validator: {
             $jsonSchema: {
                 bsonType: "object",
-                required: ["computer_name", "operating_system", "disk_type", "disk_capacity", "installation"],
+                required: ["first_name", "last_name", "discipline"],
                 properties: {
-                    computer_name: {
+                    first_name: {
                         bsonType: "string",
                         description: "must be a string and is required",
                     },
-                    operating_system: {
+                    last_name: {
                         bsonType: "string",
                         description: "must be a string and is required",
                     },
-                    disk_type: {
+                    discipline: {
                         bsonType: "string",
                         description: "must be a string and is required",
                     },
-                    disk_capacity: {
-                        bsonType: "string",
-                        description: "must be a string and is required",
-                    },
-                    installation: {
-                        bsonType: "date",
-                        description: "must be a date and is required",
-                    },
-                    softwares: {
+
+                    course: {
                         bsonType: "array",
                         items: {
                             bsonType: "object",
-                            required: ["name", "description"],
+                            required: ["label", "grade", "group"],
                             properties: {
-                                name: {
-                                    bsonType: "string",
-                                    description: "must be a string and is required",
-                                },
-                                description: {
-                                    bsonType: "string",
-                                    description: "must be a string and is required",
-                                }
-                            }
-                        }
-                    },
-                    interventions: {
-                        bsonType: "array",
-                        items: {
-                            bsonType: "object",
-                            required: ["intervention_date", "object"],
-                            properties: {
-                                intervention_date: {
+                                label: {
                                     bsonType: "date",
                                     description: "must be a date and is required",
                                 },
-                                object: {
-                                    bsonType="string",
+                                grade: {
+                                    bsonType: "string",
+                                    description: "must be a string and is required",
+                                },
+                                group: {
+                                    bsonType: "string",
                                     description: "must be a string and is required",
                                 }
                             }
@@ -68,5 +48,5 @@ module.exports = async (db) => {
                 },
             },
         },
-    });*/
+    });
 };

@@ -57,7 +57,7 @@ module.exports = (app, db) => {
         const data = req.body;
         try {
 
-            let local_ok = validation.local_validation(label, type);
+            let local_ok = validation.local_validation(data.label, data.type);
 
             if (local_ok == true) {
                 const response = await db.collection("locals").insertOne(data);
@@ -96,7 +96,7 @@ module.exports = (app, db) => {
             const data = req.body;
             const _id = new ObjectID(localId);
 
-            let local_ok = validation.local_validation(label, type);
+            let local_ok = validation.local_validation(data.label, data.type);
 
             if (local_ok == true) {
                 const response = await localsCollection.findOneAndUpdate({

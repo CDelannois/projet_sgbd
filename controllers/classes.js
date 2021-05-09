@@ -2,7 +2,7 @@ const {
     Db, ObjectID
 } = require('mongodb');
 
-const validation = require('./validators/computer_validation');
+const validation = require('./validators/classes_validation');
 
 
 module.exports = (app, db) => {
@@ -170,7 +170,7 @@ module.exports = (app, db) => {
             const { last_name, first_name } = req.body;
             const _id = new ObjectID(classeId);
 
-            let student_ok = validation.class_validation(last_name, first_name)
+            let student_ok = validation.student_validation(last_name, first_name)
 
             if (student_ok == true) {
                 const { value } = await classesCollection.findOneAndUpdate({
@@ -202,7 +202,7 @@ module.exports = (app, db) => {
             const _id = new ObjectID(classeId);
             const _studentId = new ObjectID(studentId);
 
-            let student_ok = validation.class_validation(last_name, first_name)
+            let student_ok = validation.student_validation(last_name, first_name)
 
             if (student_ok == true) {
                 const { value } = await classesCollection.findOneAndUpdate({
