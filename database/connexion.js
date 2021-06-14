@@ -7,9 +7,9 @@ const locals_constraint = require('./validation/locals_constraint');
 const teachers_constraint = require('./validation/teachers_constraint');
 const login_constraint = require('./validation/login_constraint');
 
-const url = "mongodb://localhost:27033";
+const url = "mongodb://localhost:27017";
 
-const dbName = "CharlesMax";
+const dbName = "gestion_ordinateurs";
 
 const getDb = async () => {
   let db;

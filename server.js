@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyparser = require('body-parser');
+const cors = require('cors');
 const app = express();
 const port = 3000;
 const databaseConnexion = require('./database/connexion');
@@ -7,6 +8,7 @@ const { myPassportLocal, myPassportJWT } = require('./passport');
 const passport = require('passport');
 
 app.use(bodyparser.urlencoded({ extended: false }));
+app.use(cors());
 
 (async () => {
     app.use('^/api', passport.authenticate('jwt', { session: false }));
