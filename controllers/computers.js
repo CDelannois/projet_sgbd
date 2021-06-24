@@ -54,15 +54,6 @@ module.exports = (app, db) => {
     //Créer un ordinateur
     app.post('/computers', async (req, res) => {
         const data = req.body;
-        data.computer_name = new String(data.computer_name);
-        data.operating_system = new String(data.operating_system);
-        data.disk_type = new String(data.disk_type);
-        data.disk_capacity = new String(data.disk_capacity);
-        console.log(data.installation);
-        data.installation = Date.parse(data.installation);
-        console.log('____________________________________________________________________');
-        console.log(data.installation);
-
 
         try {
 
